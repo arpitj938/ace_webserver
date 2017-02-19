@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 class alumni_data(models.Model):
-	enroll_no=models.SmallIntegerField(primary_key=True)
+	enroll_no=models.CharField(primary_key=True,max_length=20,blank=False,null=False)
 	name=models.CharField(max_length=200,blank=True,null=True)
 	mobile=models.CharField(max_length=20,blank=True,null=True)
 	# current_status=(

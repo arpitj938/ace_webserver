@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from .models import *
 import jwt
-from django.core.mail import EmailMessage
 import random 
 from django.views.decorators.csrf import csrf_exempt
 from django import forms
@@ -9,6 +8,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse,HttpResponseBadRequest
 from django.contrib.auth import authenticate, login,logout
+from django.core.mail import EmailMessage,get_connection
+from keys.models import *
+from django.core.mail.backends.smtp import EmailBackend
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
@@ -70,7 +72,7 @@ def login_view(request):
 		if request.method=='POST':
 			login_id=str(request.POST.get('login_id'))
 			password=str(request.POST.get('password'))
-			password=jwt.decode(password,'secret',algorithms=['HS256'])
+			# password=jwt.decode(password,'secret',algorithms=['HS256'])
 			try:
 				login_data_row=login_data.objects.get(login_id=login_id)
 				print login_id
@@ -92,18 +94,49 @@ def login_view(request):
 		else:
 			return render(request,'main.html')
 
+@csrf_exempt
+def signup_view(request):
+	if request.user.is_authenticated():
+		return render(request,'welcome.html')
+	else:
+		if request.method=='POST':
+			try:
+				print "try"
+				enroll_no=str(request.POST.get('enroll_no'))
+				print enroll_no
+				name=str(request.POST.get('name'))
+				print name
+				mobile=str(request.POST.get('mobile'))
+				email=str(request.POST.get('email'))
+				print email
+				otp=str(random.randint(111111,999999))
+				try:
+					print "try 1"
+					login_data_row=login_data.objects.get(login_id=enroll_no)
+					print enroll_no
+					setattr(login_data_row,'otp',int(otp))
+					setattr(login_data_row,'email',str(email))
+					login_data_row.save()
+					key_data_row=keys_data.objects.get(flag=True)
+					link="http://127.0.0.1:8000/verify_email?"+"email="+email+"&otp="+otp
+					body="""welcome %s to Association of Computer engg.
 
+kindly click on the link below to complete email verifications
+%s
 
-
-
-
-
-
-
-
-
-
-
-
-
-# Create your views here.
+Thanks and Regards,
+ACE , NIT Raipur"""
+					print body % (name,link)
+					backend = EmailBackend(host=str(key_data_row.host), port=int(key_data_row.port), username=str(key_data_row.username), 
+		                       password=str(key_data_row.password), use_tls=True, fail_silently=True)
+					print "127"
+					EmailMsg=EmailMessage("ACE",body % (name,link),'no-reply@gmail.com',[email] ,connection=backend)
+					print "130"
+					EmailMsg.send()
+					return HttpResponse("done")
+				except:
+					return render(request,"signup.html",{'msg':'enroll_no is not valid'})
+			except:
+				return render(request,"signup.html",{'msg':'enroll_no not get'})
+		else:
+			return render(request,"signup.html")

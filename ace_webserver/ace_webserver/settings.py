@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'faculty',
     'alumni',
     'tinymce',
-    'login'
+    'login',
+    'keys',
 ]
 
 MIDDLEWARE = [

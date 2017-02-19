@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 class student_data(models.Model):
-	enroll_no=models.DecimalField(primary_key=True,decimal_places=0,max_digits=10)
+	enroll_no=models.CharField(primary_key=True,null=False,blank=False,max_length=20)
 	name=models.CharField(max_length=200)
 	# sem_choices=(
 	# 	(1,"1st semester"),
