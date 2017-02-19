@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from tinymce.models import HTMLField
 
 from django.db import models
 
@@ -21,8 +22,8 @@ class area_of_interest_data(models.Model):
 	faculty_id=models.SmallIntegerField(primary_key=True)
 	area_of_interest=models.CharField(max_length=300,blank=True,null=True)
 
-class other_details(models.Model):
+class other_details_data(models.Model):
 	faculty_id=models.SmallIntegerField(primary_key=True)
-	other_details=models.TextField(max_length=8000,blank=True,null=True)
+	other_details=HTMLField()
 
 # Create your models here.

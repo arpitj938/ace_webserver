@@ -14,6 +14,6 @@ admin.site.register(area_of_interest_data,area_of_interest_dataAdmin)
 class other_detailsAdmin(admin.ModelAdmin):
 	list_display=["faculty_id","other_details"]
 
-admin.site.register(other_details,other_detailsAdmin)
+admin.site.register(other_details_data,other_detailsAdmin)
 
 # Register your models here.

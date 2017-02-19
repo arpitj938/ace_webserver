@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'student',
     'faculty',
     'alumni',
+    'tinymce',
+    'login'
 ]
 
 MIDDLEWARE = [
@@ -57,7 +59,7 @@ ROOT_URLCONF = 'ace_webserver.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [('ace_webserver/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
